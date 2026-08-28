@@ -1,18 +1,1226 @@
 <!DOCTYPE html>
 <html lang="tr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1B4F72" />
-    <meta name="description" content="Dental AI - Klinik Yönetim Paneli" />
-    <title>Dental AI — Klinik Paneli</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-  </head>
-  <body>
-    <noscript>JavaScript gerekli.</noscript>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dental AI — Klinik Yönetim Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.29.0/dist/tabler-icons.min.css" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#171923;--surface2:#1e2130;--surface3:#252a3d;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#e8eaf0;--text2:#8b92a8;--text3:#565e7a;
+  --accent:#3b82f6;--accent-bg:rgba(59,130,246,0.12);--accent-border:rgba(59,130,246,0.3);
+  --success:#22c55e;--success-bg:rgba(34,197,94,0.1);
+  --warning:#f59e0b;--warning-bg:rgba(245,158,11,0.1);
+  --danger:#ef4444;--danger-bg:rgba(239,68,68,0.1);
+  --pro:#a78bfa;--pro-bg:rgba(167,139,250,0.1);
+  --radius:8px;--radius-lg:12px;
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:4px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:210px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.logo{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.logo-icon{width:32px;height:32px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.logo-name{font-size:13px;font-weight:600}
+.logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.nav{padding:8px 0;flex:1}
+.ns{font-size:9px;font-weight:600;color:var(--text3);padding:10px 14px 3px;text-transform:uppercase;letter-spacing:.08em}
+.ni{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:12px;color:var(--text2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;position:relative}
+.ni:hover{background:var(--surface2);color:var(--text)}
+.ni.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-bg)}
+.ni i{font-size:14px;width:16px;flex-shrink:0}
+.nb{margin-left:auto;background:var(--danger);color:#fff;font-size:9px;font-weight:600;padding:1px 5px;border-radius:10px}
+.sf{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.su{display:flex;align-items:center;gap:7px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--accent);flex-shrink:0}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-shrink:0;position:relative}
+.topbar-title{font-size:14px;font-weight:600}
+.tr{display:flex;align-items:center;gap:8px}
+.content{flex:1;overflow-y:auto;padding:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ct{font-size:12px;font-weight:600}
+.sg4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px}
+.sl{font-size:11px;color:var(--text2);margin-bottom:5px}
+.sv{font-size:22px;font-weight:700}
+.ss{font-size:10px;color:var(--text2);margin-top:3px}
+.up{color:var(--success)}.dn{color:var(--danger)}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.bs{background:var(--success-bg);color:var(--success)}
+.bw{background:var(--warning-bg);color:var(--warning)}
+.bd{background:var(--danger-bg);color:var(--danger)}
+.ba{background:var(--accent-bg);color:var(--accent)}
+.bp{background:var(--pro-bg);color:var(--pro)}
+.bg{background:var(--surface3);color:var(--text2)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;font-size:12px;font-weight:500;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--surface3)}
+.btn-p{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-p:hover{opacity:.9}
+.btn-s{background:var(--success);border-color:var(--success);color:#fff}
+.btn-sm{padding:3px 8px;font-size:11px}
+.row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:none}
+.ri{flex:1;min-width:0}
+.rn{font-size:12px;font-weight:500}
+.rd{font-size:10px;color:var(--text2);margin-top:1px}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+th{text-align:left;padding:7px 10px;font-size:10px;font-weight:600;color:var(--text3);border-bottom:1px solid var(--border);background:var(--surface2);text-transform:uppercase;letter-spacing:.05em}
+td{padding:8px 10px;border-bottom:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr:hover td{background:var(--surface2)}
+.tw{overflow-x:auto}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.fl{font-size:11px;font-weight:500;color:var(--text2)}
+.fi{padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:12px;background:var(--surface2);color:var(--text);font-family:inherit;width:100%}
+.fi:focus{outline:none;border-color:var(--accent)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+textarea.fi{min-height:90px;resize:vertical}
+.pb{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-top:4px}
+.pf{height:100%;border-radius:2px;background:var(--accent)}
+.np{position:absolute;right:16px;top:44px;width:300px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);z-index:200;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none}
+.np.open{display:block}
+.ni2{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.ni2:last-child{border-bottom:none}
+.nic{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tli{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.tli:last-child{border-bottom:none}
+.tld{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:3px}
+.tlinf{flex:1}
+.tlt{font-size:12px;font-weight:500}
+.tldl{font-size:11px;color:var(--text2);margin-top:1px}
+.tldt{font-size:10px;color:var(--text3);margin-top:2px}
+.cal-grid{display:grid;grid-template-columns:56px repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
+.cah{background:var(--surface2);font-size:10px;font-weight:600;text-align:center;padding:6px;color:var(--text2)}
+.cat{background:var(--surface2);font-size:9px;color:var(--text3);display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.cac{background:var(--surface);padding:3px 4px;min-height:36px}
+.ab{border-radius:3px;padding:2px 4px;font-size:9px;margin:1px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.ab-b{background:var(--accent-bg);color:var(--accent)}
+.ab-g{background:var(--success-bg);color:var(--success)}
+.ab-o{background:var(--warning-bg);color:var(--warning)}
+.ab-r{background:var(--danger-bg);color:var(--danger)}
+.tm{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;padding:8px}
+.tooth{border:1px solid var(--border2);border-radius:5px;padding:5px 2px;text-align:center;cursor:pointer;font-size:8px;background:var(--surface2);transition:all .15s}
+.tooth:hover{border-color:var(--accent)}
+.tooth.healthy{background:var(--success-bg);border-color:var(--success)}
+.tooth.filling{background:var(--warning-bg);border-color:var(--warning)}
+.tooth.canal{background:var(--danger-bg);border-color:var(--danger)}
+.tooth.crown{background:var(--pro-bg);border-color:var(--pro)}
+.tooth.missing{opacity:.3}
+.tn{display:block;color:var(--text3);margin-bottom:2px}
+.ti2{display:block;font-size:14px}
+.qt{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.qb{padding:8px 4px;text-align:center;border:1px solid var(--border2);border-radius:var(--radius);cursor:pointer;font-size:11px;background:var(--surface2);color:var(--text2);transition:all .15s}
+.qb:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.qb.sel{border:2px solid var(--accent);background:var(--accent-bg);color:var(--accent)}
+.rxr{display:flex;align-items:center;gap:8px;padding:8px;background:var(--surface2);border-radius:var(--radius);margin-bottom:6px;border:1px solid var(--border)}
+.ba2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ps{background:var(--surface2);border:1px dashed var(--border2);border-radius:var(--radius);height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:var(--text3);gap:6px;transition:all .15s}
+.ps:hover{border-color:var(--accent);color:var(--accent)}
+.pg{display:grid;grid-template-columns:270px 1fr;gap:12px}
+.aa{background:var(--danger-bg);border:1px solid var(--danger);border-radius:var(--radius);padding:8px 12px;font-size:11px;color:var(--danger);display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:500}
+.cb{padding:8px 12px;border-radius:10px;font-size:12px;max-width:85%;margin-bottom:8px}
+.cp{background:var(--surface3);color:var(--text);border-bottom-left-radius:2px}
+.cl{background:var(--accent-bg);color:var(--accent);border-bottom-right-radius:2px;margin-left:auto}
+.cd{background:var(--success-bg);color:var(--success);border-bottom-right-radius:2px;margin-left:auto}
+.lbr{display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface2);border-radius:var(--radius);margin-bottom:6px;border:1px solid var(--border)}
+.vc{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.vc:hover{border-color:var(--accent)}
+.vt{height:90px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:28px;position:relative}
+.vp{position:absolute;width:32px;height:32px;background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px}
+.vi{padding:8px}
+.mc{background:linear-gradient(135deg,var(--accent-bg),var(--surface2));border:1px solid var(--accent-border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px}
+.acb{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;text-align:center;color:var(--text2)}
+.ls{min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.lc{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;width:360px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.rg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.rb{padding:10px 6px;text-align:center;border:1px solid var(--border2);border-radius:var(--radius);cursor:pointer;font-size:11px;background:var(--surface2);color:var(--text2);transition:all .15s}
+.rb:hover{background:var(--surface3)}
+.rb.sel{border:2px solid var(--accent);background:var(--accent-bg);color:var(--accent)}
+.wz{min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.wc{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;width:480px;max-width:95vw;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.ws2{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.wst{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+.wst.active{color:var(--accent);font-weight:500}
+.wst.done{color:var(--success)}
+.wsn{width:22px;height:22px;border-radius:50%;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.wst.active .wsn{background:var(--accent);border-color:var(--accent);color:#fff}
+.wst.done .wsn{background:var(--success);border-color:var(--success);color:#fff}
+.wsl{flex:1;height:1px;background:var(--border2);margin:0 6px}
+.qrd{width:120px;height:120px;background:#fff;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin:0 auto}
+@media(max-width:768px){
+  .sidebar{width:60px}
+  .logo-name,.logo-sub,.ns,.ni span,.sf span:not(.av){display:none}
+  .ni{justify-content:center;padding:10px}
+  .sg4{grid-template-columns:repeat(2,1fr)}
+  .g2{grid-template-columns:1fr}
+  .pg{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } = Recharts;
+
+// DATA
+const PATIENTS = [
+  { id:1, name:'Anna Müller', phone:'+49 170 1234567', email:'anna@email.de', lastTx:'Diş çekimi', lastVisit:'27 Ağu', lang:'DE', ybd:'€8.200', status:'active', doctor:'Schmidt', allergy:'Penisilin', visits:22 },
+  { id:2, name:'Hans Weber', phone:'+49 160 9876543', email:'hans@web.de', lastTx:'Muayene', lastVisit:'25 Ağu', lang:'DE', ybd:'€1.800', status:'followup', doctor:'Schmidt', allergy:null, visits:8 },
+  { id:3, name:'James Davies', phone:'+44 7700 123456', email:'j.davies@uk.com', lastTx:'İmplant', lastVisit:'20 Ağu', lang:'EN', ybd:'€12.400', status:'active', doctor:'Müller', allergy:null, visits:14 },
+  { id:4, name:'Pieter van den Berg', phone:'+31 6 12345678', email:'p.berg@nl.nl', lastTx:'Kron', lastVisit:'15 Ağu', lang:'NL', ybd:'€3.100', status:'noshow', doctor:'Schmidt', allergy:'İbuprofen', visits:6 },
+  { id:5, name:'Sophie Klein', phone:'+49 151 5678901', email:'s.klein@mail.de', lastTx:'Kanal', lastVisit:'10 Ağu', lang:'DE', ybd:'€4.800', status:'active', doctor:'Müller', allergy:null, visits:11 },
+];
+const APPOINTMENTS = [
+  { time:'09:00', name:'Anna Müller', tx:'Diş çekimi', dur:'60dk', doc:'Dr. Schmidt', status:'came' },
+  { time:'10:20', name:'Hans Weber', tx:'Muayene', dur:'20dk', doc:'Dr. Schmidt', status:'waiting' },
+  { time:'11:00', name:'Sophie Klein', tx:'Kanal tedavisi', dur:'90dk', doc:'Dr. Müller', status:'confirmed' },
+  { time:'14:30', name:'Klaus Bauer', tx:'Dolgu', dur:'60dk', doc:'Dr. Schmidt', status:'confirmed' },
+  { time:'16:00', name:'Emma Fischer', tx:'Diş temizliği', dur:'60dk', doc:'Dr. Müller', status:'noshow' },
+];
+const PLANS = [
+  { name:'Peter Hoffmann', tx:'İmplant + kanal', amt:'€3.200', sent:'20 Ağu', day:7, prog:70 },
+  { name:'Maria Schmidt', tx:'Zirkonyum kron', amt:'€1.800', sent:'24 Ağu', day:3, prog:40 },
+  { name:'Thomas Braun', tx:'Üst çene implant', amt:'€5.500', sent:'26 Ağu', day:1, prog:15 },
+  { name:'Lisa Wagner', tx:'Diş beyazlatma', amt:'€450', sent:'13 Ağu', day:14, prog:95 },
+];
+const SAT_DATA = [{m:'Mar',s:3.8},{m:'Nis',s:4.0},{m:'May',s:4.1},{m:'Haz',s:4.3},{m:'Tem',s:4.2},{m:'Ağu',s:4.6}];
+const REV_DATA = [{m:'Mar',g:5800},{m:'Nis',g:6200},{m:'May',g:6900},{m:'Haz',g:7100},{m:'Tem',g:7000},{m:'Ağu',g:8240}];
+const LENA_DATA = [{n:'Randevu',v:38,c:'#3b82f6'},{n:'Fiyat',v:25,c:'#f59e0b'},{n:'Bilgi',v:20,c:'#22c55e'},{n:'Acil',v:7,c:'#ef4444'},{n:'Diğer',v:10,c:'#6b7280'}];
+const MORNING = [
+  {time:'09:00',name:'Anna Müller',tx:'Diş çekimi',note:'PENİSİLİN ALERJİSİ',alert:true},
+  {time:'10:20',name:'Hans Weber',tx:'Muayene',note:'İlk ziyaret',alert:false},
+  {time:'11:00',name:'Sophie Klein',tx:'Kanal 2. seans',note:'3 seans tedavi',alert:false},
+  {time:'14:30',name:'Klaus Bauer',tx:'Dolgu',note:'Kronik ağrı',alert:false},
+];
+const BLOCKED = {
+  doctor:['plans','satisfaction','lifetime','report','referral','payment','docperf','team','settings'],
+  reception:['plans','xray','satisfaction','lena','lifetime','report','referral','payment','docperf','team','settings','videolib','lab'],
+};
+const NAV = {
+  admin:[
+    {s:'Genel',i:[{id:'dashboard',ic:'ti-layout-dashboard',l:'Dashboard'},{id:'patients',ic:'ti-users',l:'Hastalar'},{id:'calendar',ic:'ti-calendar',l:'Takvim'},{id:'appointments',ic:'ti-list',l:'Randevular'}]},
+    {s:'Tedavi',i:[{id:'plans',ic:'ti-file-text',l:'Tedavi planları'},{id:'xray',ic:'ti-scan',l:'Röntgen'},{id:'videolib',ic:'ti-video',l:'Video kütüphanesi'},{id:'lab',ic:'ti-flask',l:'Laboratuvar'}]},
+    {s:'İletişim',i:[{id:'whatsapp',ic:'ti-brand-whatsapp',l:'WhatsApp',badge:3},{id:'calls',ic:'ti-phone',l:'Aramalar'}]},
+    {s:'Analiz',i:[{id:'satisfaction',ic:'ti-star',l:'Memnuniyet'},{id:'lena',ic:'ti-robot',l:'Lena'},{id:'lifetime',ic:'ti-chart-bar',l:'Hasta değeri'},{id:'report',ic:'ti-file-analytics',l:'Aylık rapor'},{id:'reminder',ic:'ti-bell',l:'Hatırlatıcılar'},{id:'referral',ic:'ti-share',l:'Referral'},{id:'payment',ic:'ti-credit-card',l:'Ödemeler'},{id:'docperf',ic:'ti-trophy',l:'Doktor perf.'}]},
+    {s:'Sistem',i:[{id:'team',ic:'ti-users-group',l:'Ekip'},{id:'settings',ic:'ti-settings',l:'Ayarlar'}]},
+  ],
+  doctor:[
+    {s:'Benim',i:[{id:'dashboard',ic:'ti-layout-dashboard',l:'Günüm'},{id:'patients',ic:'ti-users',l:'Hastalarım'},{id:'calendar',ic:'ti-calendar',l:'Takvimim'},{id:'appointments',ic:'ti-list',l:'Randevularım'}]},
+    {s:'Tedavi',i:[{id:'xray',ic:'ti-scan',l:'Röntgen'},{id:'videolib',ic:'ti-video',l:'Video kütüp.'},{id:'lab',ic:'ti-flask',l:'Laboratuvar'}]},
+    {s:'Araçlar',i:[{id:'reminder',ic:'ti-bell',l:'Hatırlatıcılar'},{id:'whatsapp',ic:'ti-brand-whatsapp',l:'WA köprüsü',badge:3}]},
+  ],
+  reception:[
+    {s:'Genel',i:[{id:'dashboard',ic:'ti-layout-dashboard',l:'Dashboard'},{id:'patients',ic:'ti-users',l:'Hastalar'},{id:'calendar',ic:'ti-calendar',l:'Takvim'},{id:'appointments',ic:'ti-list',l:'Randevular'}]},
+    {s:'İletişim',i:[{id:'whatsapp',ic:'ti-brand-whatsapp',l:'WhatsApp',badge:3},{id:'calls',ic:'ti-phone',l:'Aramalar'}]},
+    {s:'Takip',i:[{id:'reminder',ic:'ti-bell',l:'Hatırlatıcılar'}]},
+  ],
+};
+const TITLES = {dashboard:'Dashboard',patients:'Hastalar',profile:'Hasta Profili',calendar:'Takvim',appointments:'Randevular',plans:'Tedavi Planları',xray:'Röntgen Analizi',videolib:'Video Kütüphanesi',lab:'Laboratuvar',whatsapp:'WhatsApp',calls:'Aramalar',satisfaction:'Memnuniyet',lena:'Lena Performansı',lifetime:'Hasta Değeri',report:'Aylık Rapor',reminder:'Hatırlatıcılar',referral:'Referral',payment:'Ödemeler',docperf:'Doktor Performansı',team:'Ekip Yönetimi',settings:'Ayarlar',blocked:'Erişim Kısıtlı'};
+
+// HELPERS
+const Bx = ({t,c})=><span className={`badge b${t}`}>{c}</span>;
+const Av = ({name,size=28})=><div className="av" style={{width:size,height:size,fontSize:size*.35}}>{name?.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>;
+const Pb = ({v})=><div className="pb"><div className="pf" style={{width:`${v}%`}}/></div>;
+const Btn = ({children,type='',sm,onClick,style})=><button className={`btn${type?' btn-'+type:''}${sm?' btn-sm':''}`} onClick={onClick} style={style}>{children}</button>;
+
+const statusBadge = s=>{
+  const m={active:['s','Aktif'],followup:['w','Takipte'],noshow:['d','Gelmedi'],came:['s','Geldi'],waiting:['w','Bekliyor'],confirmed:['a','Onaylı']};
+  const [t,l]=m[s]||['g',s];
+  return <Bx t={t} c={l}/>;
+};
+
+// PAGES
+const Dashboard = ({role})=>(
+  <div>
+    {role==='doctor' && (
+      <div className="mc">
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
+          <i className="ti ti-sun" style={{fontSize:18,color:'var(--accent)'}}/>
+          <span style={{fontWeight:600,fontSize:13}}>Sabah Özeti — Dr. Schmidt</span>
+          <Bx t="a" c="27 Ağu"/>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
+          {MORNING.map((a,i)=>(
+            <div key={i} style={{background:'var(--surface)',borderRadius:'var(--radius)',padding:8,border:a.alert?'1px solid var(--danger)':'1px solid var(--border)'}}>
+              <div style={{fontSize:11,color:'var(--text3)',marginBottom:2}}>{a.time}</div>
+              <div style={{fontSize:12,fontWeight:500,marginBottom:2}}>{a.name}</div>
+              <div style={{fontSize:11,color:'var(--text2)',marginBottom:4}}>{a.tx}</div>
+              {a.alert?<Bx t="d" c={'⚠ '+a.note}/>:<span style={{fontSize:10,color:'var(--text3)'}}>{a.note}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    <div className="sg4">
+      <div className="stat"><div className="sl">Bugünkü hastalar</div><div className="sv">{role==='doctor'?'4':'12'}</div><div className="ss up">↑ +3</div></div>
+      {role!=='reception'&&<div className="stat"><div className="sl">Bu ay gelir</div><div className="sv">€8.240</div><div className="ss up">↑ +18%</div></div>}
+      {role!=='reception'&&<div className="stat"><div className="sl">Bekleyen planlar</div><div className="sv">€47.000</div><div className="ss dn">8 karar bekliyor</div></div>}
+      <div className="stat"><div className="sl">Google puanı</div><div className="sv">4.8 ★</div><div className="ss up">14 yorum</div></div>
+    </div>
+    <div className="g2">
+      <div className="card">
+        <div className="ch"><div className="ct">Bugünkü randevular</div><Bx t="a" c={role==='doctor'?'4':'12'}/></div>
+        {APPOINTMENTS.slice(0,4).map((a,i)=>(
+          <div key={i} className="row">
+            <div style={{fontSize:10,color:'var(--text3)',width:36,flexShrink:0}}>{a.time}</div>
+            <div className="ri"><div className="rn">{a.name}</div><div className="rd">{a.tx} — {a.dur}</div></div>
+            {statusBadge(a.status)}
+          </div>
+        ))}
+      </div>
+      <div className="card">
+        <div className="ch"><div className="ct">Otomasyon durumu</div></div>
+        {[['ti-mail','E-posta otomasyonu','s','Aktif'],['ti-brand-whatsapp','WhatsApp Lena','w','API bekleniyor'],['ti-message','SMS hatırlatıcılar','w','Twilio bekleniyor'],['ti-phone','Voice AI (Lena)','w','Vapi bağlanıyor'],['ti-scan','Röntgen YZ analizi','s','Aktif'],['ti-database','Google Sheets CRM','s','Aktif']].map(([ic,lb,t,st])=>(
+          <div key={lb} className="row">
+            <i className={`ti ${ic}`} style={{fontSize:13,color:t==='s'?'var(--accent)':'var(--text2)'}}/>
+            <div className="ri"><div className="rn">{lb}</div></div>
+            <Bx t={t} c={st}/>
+          </div>
+        ))}
+      </div>
+    </div>
+    {role!=='reception'&&(
+      <div className="g2">
+        <div className="card">
+          <div className="ch"><div className="ct">Bekleyen tedavi planları</div><Bx t="w" c="8 plan"/></div>
+          {PLANS.slice(0,3).map((p,i)=>(
+            <div key={i} className="row">
+              <div className="ri"><div className="rn">{p.name}</div><div className="rd">{p.tx} — Gün {p.day}</div><Pb v={p.prog}/></div>
+              <div style={{fontSize:12,fontWeight:600,color:'var(--accent)',flexShrink:0}}>{p.amt}</div>
+            </div>
+          ))}
+        </div>
+        <div className="card">
+          <div className="ch"><div className="ct">Son bildirimler</div><Bx t="d" c="4 yeni"/></div>
+          {[['ti-phone-incoming','d','Acil — Sophie Klein','5 dk önce'],['ti-check','s','Plan kabul — Peter €3.200','23 dk önce'],['ti-calendar-x','w','Gelmedi — Emma Fischer','1 saat önce'],['ti-brand-whatsapp','a','Randevu — Hans Weber','2 saat önce']].map(([ic,t,ti,tm])=>(
+            <div key={ti} className="row">
+              <div className="nic" style={{background:`var(--${t==='s'?'success':t==='w'?'warning':t==='d'?'danger':'accent'}-bg)`,width:26,height:26,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <i className={`ti ${ic}`} style={{fontSize:12,color:`var(--${t==='s'?'success':t==='w'?'warning':t==='d'?'danger':'accent'})`}}/>
+              </div>
+              <div className="ri"><div className="rn">{ti}</div><div className="rd">{tm}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+);
+
+const Patients = ({role,onProfile})=>(
+  <div>
+    <div className="card">
+      <div className="ch">
+        <div className="ct">{role==='doctor'?'Hastalarım — Dr. Schmidt':'Hasta listesi'}</div>
+        <div style={{display:'flex',gap:6}}>
+          <input placeholder="Ara..." className="fi" style={{width:140,padding:'4px 8px'}}/>
+          <Btn type="p" sm><i className="ti ti-plus"/> Ekle</Btn>
+        </div>
+      </div>
+      <div className="tw">
+        <table>
+          <thead><tr>
+            <th style={{width:'24%'}}>Hasta</th><th style={{width:'16%'}}>Telefon</th><th style={{width:'14%'}}>Son tedavi</th>
+            <th style={{width:'10%'}}>Son ziyaret</th><th style={{width:'7%'}}>Dil</th>
+            {role!=='reception'&&<th style={{width:'9%'}}>YBD</th>}
+            <th style={{width:'9%'}}>Durum</th><th style={{width:'11%'}}></th>
+          </tr></thead>
+          <tbody>
+            {PATIENTS.filter(p=>role!=='doctor'||p.doctor==='Schmidt').map(p=>(
+              <tr key={p.id}>
+                <td><div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <Av name={p.name} size={22}/>
+                  {p.name}
+                  {p.allergy&&<i className="ti ti-alert-triangle" style={{fontSize:11,color:'var(--danger)'}} title={`Alerji: ${p.allergy}`}/>}
+                </div></td>
+                <td>{p.phone}</td><td>{p.lastTx}</td><td>{p.lastVisit}</td>
+                <td><Bx t="a" c={p.lang}/></td>
+                {role!=='reception'&&<td style={{fontWeight:600,color:'var(--accent)'}}>{p.ybd}</td>}
+                <td>{statusBadge(p.status)}</td>
+                <td><Btn sm onClick={()=>onProfile(p)}>Profil</Btn></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+);
+
+const PatientProfile = ({patient,onBack})=>{
+  const [sel,setSel]=useState(null);
+  const [sent,setSent]=useState(false);
+  return (
+    <div>
+      <Btn sm onClick={onBack} style={{marginBottom:12}}><i className="ti ti-arrow-left"/> Geri</Btn>
+      <div className="pg">
+        <div>
+          <div className="card" style={{textAlign:'center',marginBottom:10}}>
+            <Av name={patient.name} size={52}/>
+            <div style={{fontSize:15,fontWeight:600,marginTop:8}}>{patient.name}</div>
+            <div style={{fontSize:11,color:'var(--text2)',marginTop:2}}>Hasta — {patient.visits} ziyaret</div>
+            <div style={{display:'flex',justifyContent:'center',gap:5,marginTop:8}}>
+              <Bx t="s" c="Aktif"/><Bx t="a" c={patient.lang}/>
+              {patient.ybd&&parseInt(patient.ybd.replace(/[€.]/g,''))>5000&&<Bx t="p" c="VIP"/>}
+            </div>
+            {patient.allergy&&<div className="aa" style={{marginTop:12}}><i className="ti ti-alert-triangle"/> Alerji: {patient.allergy}</div>}
+            <div style={{borderTop:'1px solid var(--border)',paddingTop:10,marginTop:10,textAlign:'left'}}>
+              {[['Telefon',patient.phone],['E-posta',patient.email],['Doktor','Dr. '+patient.doctor],['Ziyaret',patient.visits]].map(([k,v])=>(
+                <div key={k} className="row" style={{padding:'4px 0'}}>
+                  <div style={{fontSize:10,color:'var(--text3)',width:70}}>{k}</div>
+                  <div style={{fontSize:11}}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card" style={{marginBottom:10}}>
+            <div className="ct" style={{marginBottom:10}}>Hızlı tedavi seç</div>
+            <div className="qt">
+              {['Çekim','Dolgu','Kanal','İmplant','Kron','Temizlik'].map(t=>(
+                <div key={t} className={`qb${sel===t?' sel':''}`} onClick={()=>{setSel(t);setSent(false);}}>
+                  <i className="ti ti-tooth" style={{fontSize:16,display:'block',marginBottom:2}}/>
+                  {t}
+                </div>
+              ))}
+            </div>
+            {sel&&(sent
+              ?<div style={{marginTop:10,background:'var(--success-bg)',color:'var(--success)',borderRadius:'var(--radius)',padding:'8px 12px',fontSize:11,textAlign:'center'}}><i className="ti ti-check"/> {sel} bakım talimatı WhatsApp ile gönderildi</div>
+              :<Btn type="s" onClick={()=>setSent(true)} style={{width:'100%',justifyContent:'center',marginTop:10}}><i className="ti ti-send"/> Bakım talimatı gönder</Btn>
+            )}
+          </div>
+          <div className="card">
+            <div className="ct" style={{marginBottom:10}}>Hasta portali — QR Kod</div>
+            <div className="qrd" style={{marginBottom:10}}>
+              <div style={{textAlign:'center'}}>
+                <div style={{fontSize:32,marginBottom:4}}>▓▒░▓▒░</div>
+                <div style={{fontSize:9,color:'#333'}}>QR Kod</div>
+              </div>
+            </div>
+            <div style={{fontSize:11,color:'var(--text2)',textAlign:'center',marginBottom:8}}>Hasta bu QR kodu tarayarak kendi tedavi geçmişini görebilir.</div>
+            <Btn style={{width:'100%',justifyContent:'center'}}><i className="ti ti-download"/> QR İndir</Btn>
+          </div>
+        </div>
+        <div>
+          <div className="card" style={{marginBottom:10}}>
+            <div className="ch">
+              <div className="ct">Diş haritası</div>
+              <div style={{display:'flex',gap:8,fontSize:10,color:'var(--text2)'}}>
+                {[['Sağlıklı','success'],['Dolgu','warning'],['Kanal','danger'],['Kron','pro']].map(([l,c])=>(
+                  <span key={l} style={{display:'flex',alignItems:'center',gap:3}}>
+                    <span style={{width:8,height:8,borderRadius:2,background:`var(--${c}-bg)`,border:`1px solid var(--${c})`,display:'inline-block'}}/>
+                    {l}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div style={{fontSize:10,color:'var(--text3)',marginBottom:4,paddingLeft:8}}>Üst çene</div>
+            <div className="tm">
+              {[{n:'18',s:'healthy'},{n:'17',s:'healthy'},{n:'16',s:'filling'},{n:'15',s:'filling'},{n:'14',s:'healthy'},{n:'13',s:'healthy'},{n:'12',s:'healthy'},{n:'11',s:'healthy'}].map(t=>(
+                <div key={t.n} className={`tooth ${t.s}`}><span className="tn">{t.n}</span><span className="ti2">🦷</span></div>
+              ))}
+            </div>
+            <div style={{fontSize:10,color:'var(--text3)',margin:'6px 0 4px',paddingLeft:8}}>Alt çene</div>
+            <div className="tm">
+              {[{n:'48',s:'missing'},{n:'47',s:'healthy'},{n:'46',s:'healthy'},{n:'36',s:'canal'},{n:'35',s:'crown'},{n:'34',s:'healthy'},{n:'33',s:'healthy'},{n:'32',s:'healthy'}].map(t=>(
+                <div key={t.n} className={`tooth ${t.s}`}><span className="tn">{t.n}</span><span className="ti2">{t.s==='missing'?'○':'🦷'}</span></div>
+              ))}
+            </div>
+          </div>
+          <div className="card" style={{marginBottom:10}}>
+            <div className="ch"><div className="ct">Tedavi notu</div></div>
+            <div style={{fontSize:11,color:'var(--text3)',marginBottom:6}}>27 Ağu 2026 — Dr. Schmidt</div>
+            <textarea className="fi" defaultValue="27 Ağu: Alt sol 36 nolu dişe kanal tedavisi uygulandı. Hasta prosedürü iyi tolere etti. Penisilin alerjisi nedeniyle Klindamisin yazıldı."/>
+            <Btn type="p" sm style={{marginTop:8}}><i className="ti ti-device-floppy"/> Kaydet</Btn>
+          </div>
+          <div className="card" style={{marginBottom:10}}>
+            <div className="ch"><div className="ct">Reçete / İlaç</div><Btn type="p" sm><i className="ti ti-plus"/> Ekle</Btn></div>
+            {[{n:'Klindamisin 300mg',d:'3x1, 5 gün — 27 Ağu',t:'w'},{n:'İbuprofen 400mg',d:'2x1 — 27 Ağu',t:'s'}].map(r=>(
+              <div key={r.n} className="rxr">
+                <i className="ti ti-pill" style={{fontSize:15,color:`var(--${r.t==='w'?'warning':'success'})`}}/>
+                <div className="ri"><div className="rn">{r.n}</div><div className="rd">{r.d}</div></div>
+                <Bx t={r.t} c={r.t==='w'?'Aktif':'Bitti'}/>
+              </div>
+            ))}
+          </div>
+          <div className="card" style={{marginBottom:10}}>
+            <div className="ch"><div className="ct">Önce / Sonra</div><Btn sm><i className="ti ti-upload"/> Yükle</Btn></div>
+            <div className="ba2">
+              <div><div style={{fontSize:10,color:'var(--text3)',marginBottom:4,textAlign:'center'}}>Önce</div><div className="ps"><i className="ti ti-camera" style={{fontSize:22}}/><span>Fotoğraf yükle</span></div></div>
+              <div><div style={{fontSize:10,color:'var(--text3)',marginBottom:4,textAlign:'center'}}>Sonra</div><div className="ps"><i className="ti ti-camera" style={{fontSize:22}}/><span>Fotoğraf yükle</span></div></div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="ch"><div className="ct">Tedavi geçmişi</div><Btn type="p" sm><i className="ti ti-plus"/> Ekle</Btn></div>
+            {[{t:'Diş çekimi — Alt sol 36',d:'Dr. Schmidt • €180',dt:'27 Ağu 2026'},{t:'Dolgu — Üst sağ 15, 16',d:'Dr. Schmidt • €320',dt:'12 May 2026'},{t:'Kanal tedavisi — 36',d:'Dr. Schmidt • €650',dt:'Jan–Mar 2026'}].map((item,i)=>(
+              <div key={i} className="tli">
+                <div className="tld"/>
+                <div className="tlinf"><div className="tlt">{item.t}</div><div className="tldl">{item.d}</div><div className="tldt">{item.dt}</div></div>
+                <Bx t="s" c="Bitti"/>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Calendar = ()=>(
+  <div>
+    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+      <div style={{display:'flex',alignItems:'center',gap:8}}>
+        <Btn style={{padding:'5px 8px'}}><i className="ti ti-chevron-left"/></Btn>
+        <span style={{fontSize:13,fontWeight:600}}>27 Ağu — 1 Eyl 2026</span>
+        <Btn style={{padding:'5px 8px'}}><i className="ti ti-chevron-right"/></Btn>
+      </div>
+      <div style={{display:'flex',gap:6}}><Btn sm>Günlük</Btn><Btn type="p" sm>Haftalık</Btn><Btn sm>Aylık</Btn></div>
+    </div>
+    <div className="cal-grid">
+      <div className="cah"/>
+      {['Pzt 27','Sal 28','Çar 29','Per 30','Cum 31','Cmt 1'].map(d=><div key={d} className="cah">{d}</div>)}
+      <div className="cat">09:00</div>
+      <div className="cac"><div className="ab ab-g">Anna M. — Çekim</div></div>
+      <div className="cac"><div className="ab ab-b">Klaus B. — Dolgu</div></div>
+      <div className="cac"/>
+      <div className="cac"><div className="ab ab-b">Lisa W. — Kontrol</div></div>
+      <div className="cac"/>
+      <div className="cac"><div className="ab ab-o">Maria K. — Muayene</div></div>
+      <div className="cat">10:00</div>
+      <div className="cac"><div className="ab ab-o">Hans W. — Muayene</div></div>
+      <div className="cac"/>
+      <div className="cac"><div className="ab ab-b">Peter H. — İmplant</div></div>
+      <div className="cac"/>
+      <div className="cac"><div className="ab ab-b">James D. — Kontrol</div></div>
+      <div className="cac"><div className="ab ab-b">Thomas B. — Dolgu</div></div>
+      <div className="cat">11:00</div>
+      <div className="cac"><div className="ab ab-b">Sophie K. — Kanal</div></div>
+      <div className="cac"><div className="ab ab-b">Emma F. — Beyaz.</div></div>
+      <div className="cac"><div className="ab ab-b">Sophie K. — Kanal 2</div></div>
+      <div className="cac"><div className="ab ab-b">Hans W. — Dolgu</div></div>
+      <div className="cac"/>
+      <div className="cac"/>
+      <div className="cat">14:00</div>
+      <div className="cac"><div className="ab ab-b">Klaus B. — Kron</div></div>
+      <div className="cac"/>
+      <div className="cac"><div className="ab ab-b">Pieter V. — Kontrol</div></div>
+      <div className="cac"><div className="ab ab-b">Anna M. — Kontrol</div></div>
+      <div className="cac"><div className="ab ab-b">Maria S. — Kron</div></div>
+      <div className="cac"/>
+      <div className="cat">16:00</div>
+      <div className="cac"><div className="ab ab-r">Emma F. — GELMEDİ</div></div>
+      <div className="cac"/><div className="cac"/><div className="cac"/><div className="cac"/><div className="cac"/>
+    </div>
+    <div style={{display:'flex',gap:14,fontSize:10,color:'var(--text2)'}}>
+      {[['success','Tamamlandı'],['accent','Onaylı'],['warning','Bekliyor'],['danger','Gelmedi']].map(([c,l])=>(
+        <span key={l} style={{display:'flex',alignItems:'center',gap:4}}>
+          <span style={{width:9,height:9,borderRadius:2,background:`var(--${c}-bg)`,display:'inline-block'}}/>{l}
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
+const Appointments = ({role})=>(
+  <div>
+    <div className="sg3">
+      <div className="stat"><div className="sl">Bugün</div><div className="sv">{role==='doctor'?'4':'12'}</div></div>
+      <div className="stat"><div className="sl">Bu hafta</div><div className="sv">{role==='doctor'?'18':'47'}</div></div>
+      <div className="stat"><div className="sl">Gelmeme oranı</div><div className="sv">8%</div><div className="ss up">Geçen ay 14%</div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Randevular — 27 Ağu</div><Btn type="p" sm><i className="ti ti-plus"/> Ekle</Btn></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'8%'}}>Saat</th><th style={{width:'20%'}}>Hasta</th><th style={{width:'18%'}}>Tedavi</th><th style={{width:'7%'}}>Süre</th><th style={{width:'12%'}}>Doktor</th><th style={{width:'10%'}}>SMS</th><th style={{width:'10%'}}>Durum</th><th style={{width:'15%'}}></th></tr></thead>
+        <tbody>
+          {APPOINTMENTS.map((a,i)=>(
+            <tr key={i}>
+              <td style={{fontWeight:600}}>{a.time}</td><td>{a.name}</td><td>{a.tx}</td><td>{a.dur}</td><td>{a.doc}</td>
+              <td><Bx t="s" c="✓ Gönderildi"/></td>
+              <td>{statusBadge(a.status)}</td>
+              <td>{a.status==='noshow'?<Btn sm style={{color:'var(--accent)'}}><i className="ti ti-brand-whatsapp"/> WA gönder</Btn>:<Btn sm>Detay</Btn>}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const Plans = ()=>(
+  <div>
+    <div className="sg4">
+      <div className="stat"><div className="sl">Bekleyen</div><div className="sv">8</div></div>
+      <div className="stat"><div className="sl">Toplam değer</div><div className="sv">€47.000</div></div>
+      <div className="stat"><div className="sl">Bu ay kabul</div><div className="sv">€18.200</div><div className="ss up">5 plan</div></div>
+      <div className="stat"><div className="sl">Kabul oranı</div><div className="sv">62%</div><div className="ss up">+14%</div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Tedavi kabul takibi</div><Btn type="p" sm><i className="ti ti-plus"/> Yeni plan</Btn></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'18%'}}>Hasta</th><th style={{width:'22%'}}>Tedavi</th><th style={{width:'10%'}}>Tutar</th><th style={{width:'10%'}}>Gönderilme</th><th style={{width:'8%'}}>Gün</th><th style={{width:'15%'}}>İlerleme</th><th style={{width:'17%'}}>Durum</th></tr></thead>
+        <tbody>
+          {PLANS.map((p,i)=>(
+            <tr key={i}>
+              <td>{p.name}</td><td>{p.tx}</td>
+              <td style={{fontWeight:600,color:'var(--accent)'}}>{p.amt}</td>
+              <td>{p.sent}</td><td>{p.day}</td>
+              <td><Pb v={p.prog}/></td>
+              <td><Bx t={p.day>=14?'d':p.day>=7?'w':'a'} c={`Gün ${p.day} takip`}/></td>
+            </tr>
+          ))}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const Xray = ()=>(
+  <div>
+    <div className="card">
+      <div className="ch"><div className="ct">Röntgen YZ analizi</div><Btn type="p" sm><i className="ti ti-upload"/> Röntgen yükle</Btn></div>
+      <div className="g3">
+        {[{n:'Anna Müller',d:'27 Ağu — Üst çene',c:'Dolgu',p:'€300-500',t:'w'},{n:'Peter Hoffmann',d:'20 Ağu — Alt çene',c:'Kanal',p:'€800-1200',t:'d'},{n:'James Davies',d:'15 Ağu — Panoramik',c:'Normal',p:'Kontrol',t:'s'}].map(x=>(
+          <div key={x.n} style={{background:'var(--surface2)',borderRadius:'var(--radius)',overflow:'hidden',border:'1px solid var(--border)'}}>
+            <div style={{height:100,background:'var(--surface3)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:36,color:'var(--text3)'}}><i className="ti ti-scan"/></div>
+            <div style={{padding:10}}>
+              <div style={{fontSize:12,fontWeight:500}}>{x.n}</div>
+              <div style={{fontSize:11,color:'var(--text2)',marginBottom:6}}>{x.d}</div>
+              <div style={{display:'flex',gap:5}}><Bx t={x.t} c={x.c}/><Bx t="a" c={x.p}/></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const WhatsApp = ()=>{
+  const [msgs,setMsgs]=useState([
+    {from:'patient',name:'Anna Müller',text:'Yarın randevumu iptal edebilir miyim?',time:'14:32'},
+    {from:'lena',text:'Tabii ki, yeni bir tarih önerebilir miyim? 30 Ağustos Pazar 10:00 müsait.',time:'14:32'},
+    {from:'patient',name:'Sophie Klein',text:'Dişim çok ağrıyor, acil randevu?',time:'11:47',emergency:true},
+    {from:'lena',text:'ACİL: Lütfen hemen +49 30 1234567 numaralı acil hattımızı arayın.',time:'11:47',emergency:true},
+    {from:'patient',name:'Hans Weber',text:'İmplant için fiyat bilgisi alabilir miyim?',time:'13:15'},
+    {from:'lena',text:'İmplant €1.500\'den başlamaktadır. Randevu almak ister misiniz?',time:'13:15'},
+  ]);
+  const [reply,setReply]=useState('');
+  const [bridge,setBridge]=useState(false);
+  return (
+    <div>
+      <div className="card">
+        <div className="ch">
+          <div className="ct">WhatsApp — Lena</div>
+          <div style={{display:'flex',gap:6}}>
+            <Bx t="w" c="API bekleniyor"/>
+            <Btn sm onClick={()=>setBridge(!bridge)}><i className="ti ti-messages"/> Canlı köprü {bridge?'kapat':'aç'}</Btn>
+          </div>
+        </div>
+        <div style={{background:'var(--warning-bg)',border:'1px solid var(--warning)',borderRadius:'var(--radius)',padding:'7px 10px',marginBottom:12,fontSize:11,color:'var(--warning)'}}>
+          <i className="ti ti-alert-triangle" style={{fontSize:11,marginRight:4}}/>Meta Business API tokeni alındığında canlı mesajlar burada görünecek.
+        </div>
+        <div style={{maxHeight:300,overflowY:'auto',padding:'0 4px'}}>
+          {msgs.map((m,i)=>(
+            <div key={i}>
+              {m.from==='patient'&&(
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4,marginTop:i>0?12:0}}>
+                  <Av name={m.name} size={20}/><span style={{fontSize:11,fontWeight:500}}>{m.name}</span>
+                  <span style={{fontSize:10,color:'var(--text3)'}}>{m.time}</span>
+                  {m.emergency&&<Bx t="d" c="ACİL"/>}
+                </div>
+              )}
+              <div className={`cb ${m.from==='patient'?'cp':m.emergency?'cd':'cl'}`}>
+                {m.from!=='patient'&&<div style={{fontSize:9,fontWeight:600,marginBottom:3,opacity:.7}}>{m.from==='lena'?'Lena (YZ)':'Dr. Schmidt'}</div>}
+                {m.text}
+              </div>
+            </div>
+          ))}
+        </div>
+        {bridge&&(
+          <div style={{marginTop:12,padding:12,background:'var(--surface2)',borderRadius:'var(--radius)',border:'1px solid var(--accent-border)'}}>
+            <div style={{fontSize:11,fontWeight:500,color:'var(--accent)',marginBottom:8}}><i className="ti ti-stethoscope"/> Doktor köprüsü — mesajınız WhatsApp üzerinden hastaya iletilecek</div>
+            <div style={{display:'flex',gap:8}}>
+              <input className="fi" placeholder="Hastaya mesaj yaz..." value={reply} onChange={e=>setReply(e.target.value)} style={{flex:1}}/>
+              <Btn type="s" onClick={()=>{if(reply.trim()){setMsgs(prev=>[...prev,{from:'doctor',text:reply,time:'Şimdi'}]);setReply('');}}}>
+                <i className="ti ti-send"/> Gönder
+              </Btn>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Calls = ()=>(
+  <div>
+    <div className="sg3">
+      <div className="stat"><div className="sl">Bugünkü aramalar</div><div className="sv">7</div><div className="ss">Lena karşıladı</div></div>
+      <div className="stat"><div className="sl">Randevu alındı</div><div className="sv">3</div></div>
+      <div className="stat"><div className="sl">Ort. süre</div><div className="sv">2:34</div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Arama kaydı — Voice AI Lena</div><Bx t="w" c="Vapi bekleniyor"/></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'18%'}}>Numara</th><th style={{width:'30%'}}>Özet</th><th style={{width:'8%'}}>Süre</th><th style={{width:'10%'}}>Saat</th><th style={{width:'14%'}}>Randevu</th><th style={{width:'20%'}}>Durum</th></tr></thead>
+        <tbody>
+          <tr><td>+49 170 9876</td><td style={{color:'var(--text2)'}}>Diş temizliği Cuma istedi</td><td>2:15</td><td>09:23</td><td style={{fontWeight:600,color:'var(--accent)'}}>Evet</td><td><Bx t="s" c="Randevu alındı"/></td></tr>
+          <tr><td>+49 151 3456</td><td style={{color:'var(--text2)'}}>İmplant fiyatı sordu</td><td>1:48</td><td>11:05</td><td style={{color:'var(--text2)'}}>Hayır</td><td><Bx t="a" c="Bilgi verildi"/></td></tr>
+          <tr><td>+49 160 2345</td><td style={{color:'var(--text2)'}}>Cevap vermedi</td><td>—</td><td>13:42</td><td style={{color:'var(--text2)'}}>—</td><td><Bx t="w" c="WA gönderildi"/></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const Satisfaction = ()=>(
+  <div>
+    <div className="sg4">
+      <div className="stat"><div className="sl">Bu ay ort.</div><div className="sv">4.6 ★</div><div className="ss up">Geçen ay 4.2</div></div>
+      <div className="stat"><div className="sl">Anket gönderildi</div><div className="sv">38</div></div>
+      <div className="stat"><div className="sl">Yanıt oranı</div><div className="sv">71%</div></div>
+      <div className="stat"><div className="sl">5 yıldız</div><div className="sv">64%</div></div>
+    </div>
+    <div className="g2">
+      <div className="card">
+        <div className="ch"><div className="ct">Aylık memnuniyet trendi</div></div>
+        <ResponsiveContainer width="100%" height={180}>
+          <LineChart data={SAT_DATA}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)"/>
+            <XAxis dataKey="m" tick={{fontSize:10,fill:'var(--text3)'}}/>
+            <YAxis domain={[3,5]} tick={{fontSize:10,fill:'var(--text3)'}}/>
+            <Tooltip contentStyle={{background:'var(--surface2)',border:'1px solid var(--border2)',borderRadius:8,fontSize:11}}/>
+            <Line type="monotone" dataKey="s" stroke="var(--accent)" strokeWidth={2} dot={{r:4,fill:'var(--accent)'}}/>
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="card">
+        <div className="ch"><div className="ct">Son anket sonuçları</div></div>
+        {[['Anna Müller','Diş çekimi',5,'s'],['Hans Weber','Muayene',4,'w'],['James Davies','İmplant',5,'s'],['Sophie Klein','Kanal',3,'d']].map(([n,t,s,c])=>(
+          <div key={n} className="row">
+            <div className="ri"><div className="rn">{n}</div><div className="rd">{t}</div></div>
+            <span style={{fontSize:14,fontWeight:600,color:`var(--${c==='s'?'success':c==='w'?'warning':'danger'})`}}>{s} ★</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const Lena = ()=>(
+  <div>
+    <div className="sg4">
+      <div className="stat"><div className="sl">Bu ay mesaj</div><div className="sv">342</div><div className="ss up">+24%</div></div>
+      <div className="stat"><div className="sl">Doğru yanıt</div><div className="sv">94%</div></div>
+      <div className="stat"><div className="sl">Randevu aldı</div><div className="sv">47</div></div>
+      <div className="stat"><div className="sl">Acil yönlendirme</div><div className="sv">8</div></div>
+    </div>
+    <div className="g2">
+      <div className="card">
+        <div className="ch"><div className="ct">Mesaj kategorileri</div></div>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie data={LENA_DATA} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="v">
+              {LENA_DATA.map((e,i)=><Cell key={i} fill={e.c}/>)}
+            </Pie>
+            <Tooltip contentStyle={{background:'var(--surface2)',border:'1px solid var(--border2)',borderRadius:8,fontSize:11}} formatter={(v,n,p)=>[v+'%',p.payload.n]}/>
+            <Legend iconSize={8} wrapperStyle={{fontSize:10}} formatter={(v,e)=>e.payload.n}/>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="card">
+        <div className="ch"><div className="ct">Performans özeti</div></div>
+        {[['Randevu sorguları','130','a'],['Fiyat soruları','86','a'],['Genel bilgi','68','a'],['Acil yönlendirme','8','d'],['İnsan müdahalesi','20','w']].map(([l,v,t])=>(
+          <div key={l} className="row">
+            <div className="ri"><div className="rn">{l}</div></div>
+            <span style={{fontSize:13,fontWeight:600,color:`var(--${t==='a'?'accent':t==='d'?'danger':'warning'})`}}>{v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const VideoLib = ()=>(
+  <div>
+    <div className="card">
+      <div className="ch"><div className="ct">Tedavi video kütüphanesi</div><Btn type="p" sm><i className="ti ti-upload"/> Video ekle</Btn></div>
+      <div style={{fontSize:11,color:'var(--text2)',marginBottom:12}}>Lena tedavi sonrası ilgili videoyu otomatik WhatsApp ile gönderir.</div>
+      <div className="g3">
+        {[{e:'🦷',t:'Diş çekimi sonrası bakım',d:'2:34',v:142},{e:'🔧',t:'Kanal tedavisi nedir?',d:'3:15',v:89},{e:'⚙️',t:'İmplant süreci',d:'4:02',v:234},{e:'💎',t:'Zirkonyum kron bakımı',d:'1:58',v:67},{e:'✨',t:'Diş beyazlatma rehberi',d:'2:20',v:156},{e:'🧼',t:'Günlük diş bakımı',d:'1:45',v:312}].map(v=>(
+          <div key={v.t} className="vc">
+            <div className="vt">
+              <span>{v.e}</span>
+              <div className="vp"><i className="ti ti-player-play"/></div>
+            </div>
+            <div className="vi">
+              <div style={{fontSize:11,fontWeight:500,marginBottom:4}}>{v.t}</div>
+              <div style={{display:'flex',gap:8,fontSize:10,color:'var(--text3)'}}>
+                <span><i className="ti ti-clock"/> {v.d}</span>
+                <span><i className="ti ti-eye"/> {v.v}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const Lab = ()=>(
+  <div>
+    <div className="sg3">
+      <div className="stat"><div className="sl">Aktif siparişler</div><div className="sv">5</div></div>
+      <div className="stat"><div className="sl">Bu hafta teslim</div><div className="sv">2</div><div className="ss up">Hazır</div></div>
+      <div className="stat"><div className="sl">Geciken</div><div className="sv">1</div><div className="ss dn">Kontrol et</div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Laboratuvar siparişleri</div><Btn type="p" sm><i className="ti ti-plus"/> Sipariş ekle</Btn></div>
+      {[{p:'Anna Müller',item:'Zirkonyum kron — 15 nolu diş',lab:'Berlin Dental Lab',o:'20 Ağu',d:'30 Ağu',t:'s',l:'Hazır'},{p:'Hans Weber',item:'Metal kron — 36 nolu diş',lab:'Premium Lab GmbH',o:'22 Ağu',d:'2 Eyl',t:'w',l:'Üretimde'},{p:'Sophie Klein',item:'Veneer — 11, 12, 21, 22',lab:'Berlin Dental Lab',o:'15 Ağu',d:'28 Ağu',t:'d',l:'Gecikti'},{p:'James Davies',item:'İmplant altyapısı',lab:'Swiss Implant Co.',o:'25 Ağu',d:'5 Eyl',t:'a',l:'Sipariş verildi'}].map(l=>(
+        <div key={l.p} className="lbr">
+          <i className="ti ti-flask" style={{fontSize:18,color:`var(--${l.t==='s'?'success':l.t==='w'?'warning':l.t==='d'?'danger':'accent'})`,flexShrink:0}}/>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:12,fontWeight:500}}>{l.p} — {l.item}</div>
+            <div style={{fontSize:10,color:'var(--text2)',marginTop:2}}>{l.lab} | Sipariş: {l.o} | Teslim: {l.d}</div>
+          </div>
+          <Bx t={l.t} c={l.l}/>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const Lifetime = ()=>(
+  <div>
+    <div className="sg3">
+      <div className="stat"><div className="sl">Ort. YBD</div><div className="sv">€3.840</div><div className="ss up">+12%</div></div>
+      <div className="stat"><div className="sl">En değerli</div><div className="sv">€12.400</div><div className="ss">James Davies</div></div>
+      <div className="stat"><div className="sl">Tekrar ziyaret</div><div className="sv">68%</div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Hasta yaşam boyu değeri</div></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'22%'}}>Hasta</th><th style={{width:'12%'}}>İlk ziyaret</th><th style={{width:'12%'}}>Ziyaret</th><th style={{width:'18%'}}>Toplam</th><th style={{width:'18%'}}>Son 12 ay</th><th style={{width:'18%'}}>Kategori</th></tr></thead>
+        <tbody>
+          {[['James Davies','Mar 2023',14,'€12.400','€6.500','p','VIP'],['Anna Müller','Haz 2022',22,'€8.200','€4.200','a','Düzenli'],['Sophie Klein','Mar 2024',11,'€4.800','€2.900','w','Gelişen'],['Peter Hoffmann','Oca 2024',6,'€3.200','€3.200','w','Gelişen']].map(([n,f,v,t,l,bt,bc])=>(
+            <tr key={n}><td>{n}</td><td>{f}</td><td>{v}</td><td style={{fontWeight:600,color:'var(--accent)'}}>{t}</td><td style={{fontWeight:500}}>{l}</td><td><Bx t={bt} c={bc}/></td></tr>
+          ))}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const Report = ()=>(
+  <div>
+    <div className="sg4">
+      <div className="stat"><div className="sl">Toplam gelir</div><div className="sv">€8.240</div><div className="ss up">+18%</div></div>
+      <div className="stat"><div className="sl">Yeni hastalar</div><div className="sv">14</div><div className="ss up">+3</div></div>
+      <div className="stat"><div className="sl">Gelmeme oranı</div><div className="sv">8%</div><div className="ss up">-6%</div></div>
+      <div className="stat"><div className="sl">En çok tedavi</div><div className="sv">Dolgu</div><div className="ss">34 işlem</div></div>
+    </div>
+    <div className="g2">
+      <div className="card">
+        <div className="ch"><div className="ct">Aylık gelir trendi</div><Btn sm><i className="ti ti-download"/> PDF</Btn></div>
+        <ResponsiveContainer width="100%" height={180}>
+          <BarChart data={REV_DATA}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)"/>
+            <XAxis dataKey="m" tick={{fontSize:10,fill:'var(--text3)'}}/>
+            <YAxis tick={{fontSize:10,fill:'var(--text3)'}}/>
+            <Tooltip contentStyle={{background:'var(--surface2)',border:'1px solid var(--border2)',borderRadius:8,fontSize:11}} formatter={v=>[`€${v.toLocaleString()}`,'Gelir']}/>
+            <Bar dataKey="g" fill="var(--accent)" radius={[4,4,0,0]}/>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="card">
+        <div className="ch"><div className="ct">Tedavi dağılımı</div></div>
+        {[['Dolgu',68,34],['Diş çekimi',44,22],['Kanal',28,14],['İmplant',18,9],['Kron/Veneer',12,6]].map(([n,p,c])=>(
+          <div key={n} className="row">
+            <div className="ri"><div className="rn">{n}</div><Pb v={p}/></div>
+            <div style={{fontSize:11,fontWeight:500,width:20,flexShrink:0}}>{c}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const Reminder = ()=>(
+  <div>
+    <div className="card">
+      <div className="ch"><div className="ct">Otomatik mesaj takvimi — önümüzdeki 7 gün</div></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'10%'}}>Tarih</th><th style={{width:'18%'}}>Hasta</th><th style={{width:'18%'}}>Tür</th><th style={{width:'10%'}}>Kanal</th><th style={{width:'30%'}}>İçerik</th><th style={{width:'14%'}}>Durum</th></tr></thead>
+        <tbody>
+          {[['Bugün','Anna Müller','Randevu hatırlatıcı','SMS','Yarın 09:00 randevunuz var','s'],['Yarın','Hans Weber','6 ay geri çağırma','SMS','6 aylık kontrol zamanı','a'],['30 Ağu','Emma Fischer','Doğum günü','WhatsApp','Doğum günü kutlaması','a'],['31 Ağu','Peter Hoffmann','Tedavi planı takip','WhatsApp','İmplant — Gün 11 takip','a'],['2 Eyl','Lisa Wagner','Ödeme hatırlatıcı','SMS','€450 taksit, 5 Eyl vadeli','a'],['3 Eyl','Sophie Klein','Memnuniyet anketi','WhatsApp','1-5 yıldız derecelendirme','a']].map(([d,n,t,c,ic,s])=>(
+            <tr key={n+d}><td style={{fontWeight:500}}>{d}</td><td>{n}</td><td>{t}</td><td><Bx t={c==='SMS'?'a':'s'} c={c}/></td><td style={{color:'var(--text2)'}}>{ic}</td><td><Bx t={s} c={s==='s'?'Gönderildi':'Planlandı'}/></td></tr>
+          ))}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const Referral = ()=>(
+  <div>
+    <div className="sg3">
+      <div className="stat"><div className="sl">Bu ay referral</div><div className="sv">8</div><div className="ss up">yeni hasta</div></div>
+      <div className="stat"><div className="sl">Referral geliri</div><div className="sv">€3.200</div></div>
+      <div className="stat"><div className="sl">En çok referral</div><div className="sv">Anna M.</div><div className="ss">3 kişi</div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Referral takibi</div></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'20%'}}>Veren</th><th style={{width:'20%'}}>Gelen hasta</th><th style={{width:'12%'}}>Tarih</th><th style={{width:'18%'}}>Tedavi</th><th style={{width:'14%'}}>Gelir</th><th style={{width:'16%'}}>Durum</th></tr></thead>
+        <tbody>
+          <tr><td>Anna Müller</td><td>Klaus Bauer</td><td>20 Ağu</td><td>Dolgu</td><td style={{fontWeight:600,color:'var(--accent)'}}>€350</td><td><Bx t="s" c="Tamamlandı"/></td></tr>
+          <tr><td>Anna Müller</td><td>Maria Klein</td><td>22 Ağu</td><td>Muayene</td><td style={{fontWeight:600,color:'var(--accent)'}}>€80</td><td><Bx t="s" c="Tamamlandı"/></td></tr>
+          <tr><td>James Davies</td><td>Robert Smith</td><td>25 Ağu</td><td>İmplant</td><td style={{fontWeight:600,color:'var(--accent)'}}>€2.800</td><td><Bx t="w" c="Devam ediyor"/></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const Payment = ()=>(
+  <div>
+    <div className="sg3">
+      <div className="stat"><div className="sl">Bekleyen ödemeler</div><div className="sv">€4.200</div><div className="ss dn">5 hasta</div></div>
+      <div className="stat"><div className="sl">Bu ay tahsil</div><div className="sv">€8.240</div><div className="ss up">+18%</div></div>
+      <div className="stat"><div className="sl">Online ödeme</div><div style={{marginTop:6}}><Bx t="w" c="Stripe bekleniyor"/></div></div>
+    </div>
+    <div className="card">
+      <div className="ch"><div className="ct">Ödeme takibi</div></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'20%'}}>Hasta</th><th style={{width:'18%'}}>Tedavi</th><th style={{width:'12%'}}>Tutar</th><th style={{width:'14%'}}>Vade</th><th style={{width:'18%'}}>SMS</th><th style={{width:'18%'}}>Durum</th></tr></thead>
+        <tbody>
+          <tr><td>Peter Hoffmann</td><td>İmplant</td><td style={{fontWeight:600,color:'var(--accent)'}}>€1.600</td><td>1 Eyl</td><td><Bx t="a" c="Planlandı"/></td><td><Bx t="w" c="Bekliyor"/></td></tr>
+          <tr><td>Lisa Wagner</td><td>Beyazlatma</td><td style={{fontWeight:600,color:'var(--accent)'}}>€450</td><td>5 Eyl</td><td><Bx t="a" c="Planlandı"/></td><td><Bx t="w" c="Bekliyor"/></td></tr>
+          <tr><td>Anna Müller</td><td>Kanal + dolgu</td><td style={{fontWeight:600,color:'var(--success)'}}>€800</td><td>15 Ağu</td><td><Bx t="s" c="Gönderildi"/></td><td><Bx t="s" c="Ödendi"/></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+);
+
+const DocPerf = ()=>(
+  <div>
+    <div className="sg4">
+      <div className="stat"><div className="sl">Bu ay hasta</div><div className="sv">87</div><div className="ss up">+12%</div></div>
+      <div className="stat"><div className="sl">Bu ay tedavi</div><div className="sv">124</div></div>
+      <div className="stat"><div className="sl">Memnuniyet</div><div className="sv">4.8 ★</div></div>
+      <div className="stat"><div className="sl">Referral</div><div className="sv">6</div><div className="ss up">bu ay</div></div>
+    </div>
+    <div className="g2">
+      {[{doc:'Dr. Schmidt',data:[['Dolgu',45],['Diş çekimi',22],['Kanal',14],['İmplant',8],['Muayene',35]]},{doc:'Dr. Müller',data:[['Dolgu',28],['Diş çekimi',15],['Kanal',8],['İmplant',4],['Muayene',18]]}].map(({doc,data})=>(
+        <div key={doc} className="card">
+          <div className="ch"><div className="ct">{doc} — Aylık özet</div></div>
+          {data.map(([t,c])=>(
+            <div key={t} className="row">
+              <div className="ri"><div className="rn">{t}</div></div>
+              <span style={{fontSize:13,fontWeight:600,color:'var(--accent)'}}>{c}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const Team = ()=>(
+  <div>
+    <div className="card">
+      <div className="ch"><div className="ct">Ekip yönetimi</div><Btn type="p" sm><i className="ti ti-plus"/> Kullanıcı ekle</Btn></div>
+      <div className="tw"><table>
+        <thead><tr><th style={{width:'22%'}}>Kullanıcı</th><th style={{width:'22%'}}>E-posta</th><th style={{width:'12%'}}>Rol</th><th style={{width:'30%'}}>Erişim</th><th style={{width:'14%'}}></th></tr></thead>
+        <tbody>
+          {[['Admin','admin@smile.de','p','Admin','Her şey'],['Dr. Schmidt','schmidt@smile.de','a','Doktor','Kendi hastaları, not, diş haritası'],['Dr. Müller','muller@smile.de','a','Doktor','Kendi hastaları, not, diş haritası'],['Resepsiyon','info@smile.de','w','Resepsiyon','Randevular, hasta ekle']].map(([n,e,t,r,ac])=>(
+            <tr key={n}><td><div style={{display:'flex',alignItems:'center',gap:6}}><Av name={n} size={22}/>{n}</div></td><td>{e}</td><td><Bx t={t} c={r}/></td><td style={{color:'var(--text2)'}}>{ac}</td><td><Btn sm>Düzenle</Btn></td></tr>
+          ))}
+        </tbody>
+      </table></div>
+      <div style={{marginTop:14,background:'var(--surface2)',borderRadius:'var(--radius)',padding:12}}>
+        <div style={{fontSize:11,fontWeight:600,marginBottom:8}}>Rol izin matrisi</div>
+        <div className="tw"><table>
+          <thead><tr><th style={{width:'28%'}}>Özellik</th><th style={{width:'24%'}}>Admin</th><th style={{width:'24%'}}>Doktor</th><th style={{width:'24%'}}>Resepsiyon</th></tr></thead>
+          <tbody>
+            {[['Dashboard','Tüm klinik','Sadece kendisi','Randevular'],['Hastalar','Herkes','Kendi hastaları','Herkes (YBD yok)'],['Gelir / Ödeme','Görür','Göremez','Göremez'],['Tedavi notu / Diş haritası','Görür & düzenler','Görür & düzenler','Göremez'],['Ayarlar / Ekip','Tam erişim','Göremez','Göremez']].map(([f,a,d,r])=>(
+              <tr key={f}><td style={{fontWeight:500}}>{f}</td><td><Bx t="s" c={a}/></td><td><Bx t={d.includes('Göremez')?'d':'w'} c={d}/></td><td><Bx t={r.includes('Göremez')?'d':'a'} c={r}/></td></tr>
+            ))}
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+);
+
+const Settings = ()=>(
+  <div>
+    <div className="g2">
+      <div className="card">
+        <div className="ch"><div className="ct">Klinik bilgileri</div></div>
+        <div className="fr"><div className="fg"><label className="fl">Klinik adı</label><input className="fi" defaultValue="Smile Dental Clinic"/></div><div className="fg"><label className="fl">Doktor adı</label><input className="fi" defaultValue="Dr. Schmidt"/></div></div>
+        <div className="fr"><div className="fg"><label className="fl">Telefon</label><input className="fi" defaultValue="+49 30 1234567"/></div><div className="fg"><label className="fl">Dil</label><select className="fi"><option>Almanca (DE)</option><option>İngilizce (EN)</option><option>Hollandaca (NL)</option><option>Türkçe (TR)</option></select></div></div>
+        <div className="fg"><label className="fl">Adres</label><input className="fi" defaultValue="Hauptstraße 45, 10115 Berlin"/></div>
+        <div className="fg"><label className="fl">Çalışma saatleri</label><input className="fi" defaultValue="Pzt-Cum 09:00-18:00, Cts 09:00-13:00"/></div>
+        <div className="fg"><label className="fl">Google Review linki</label><input className="fi" defaultValue="https://g.page/r/PENDING"/></div>
+        <div className="fg"><label className="fl">Online ödeme linki (Stripe)</label><input className="fi" placeholder="https://buy.stripe.com/..."/></div>
+        <Btn type="p" style={{width:'100%',justifyContent:'center',marginTop:6}}>Kaydet</Btn>
+      </div>
+      <div className="card">
+        <div className="ch"><div className="ct">API bağlantıları</div></div>
+        {[['WhatsApp Business API','Meta token gerekli','w'],['Twilio SMS','Telefon numarası bekleniyor','w'],['Vapi Voice AI','1bf3dd26...','s'],['Gemini AI','AQ.Ab8RN6...','s'],['Claude (Anthropic)','sk-ant-api03...','s'],['Google Sheets CRM','1Y-0B6MpJ5...','s'],['Stripe Ödeme','Online ödeme linki','w']].map(([n,d,t])=>(
+          <div key={n} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',background:'var(--surface2)',borderRadius:'var(--radius)',marginBottom:6,border:'1px solid var(--border)'}}>
+            <div><div style={{fontSize:12,fontWeight:500}}>{n}</div><div style={{fontSize:10,color:'var(--text3)'}}>{d}</div></div>
+            <Bx t={t} c={t==='s'?'Bağlı':'Bekleniyor'}/>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const Blocked = ()=>(
+  <div className="acb">
+    <i className="ti ti-lock" style={{fontSize:48,color:'var(--text3)',marginBottom:12}}/>
+    <div style={{fontSize:15,fontWeight:600,marginBottom:6}}>Erişim kısıtlı</div>
+    <div style={{fontSize:13,color:'var(--text2)',maxWidth:280}}>Bu sayfayı görüntülemek için gereken izniniz yok.</div>
+  </div>
+);
+
+// WIZARD
+const Wizard = ({onDone})=>{
+  const [step,setStep]=useState(0);
+  const [langs,setLangs]=useState(['EN']);
+  const tl=(l)=>setLangs(prev=>prev.includes(l)?prev.filter(x=>x!==l):[...prev,l]);
+  return (
+    <div className="wz">
+      <div className="wc">
+        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:20}}>
+          <div style={{width:36,height:36,background:'var(--accent-bg)',border:'1px solid var(--accent-border)',borderRadius:'var(--radius)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>🦷</div>
+          <div><div style={{fontSize:16,fontWeight:700}}>Dental AI Kurulum</div><div style={{fontSize:11,color:'var(--text2)'}}>5 adımda kliniğinizi kurun</div></div>
+        </div>
+        <div className="ws2">
+          {['Klinik','Dil','Saatler','Doktor','Hazır'].map((s,i)=>(
+            <React.Fragment key={s}>
+              <div className={`wst${i===step?' active':i<step?' done':''}`}>
+                <div className="wsn">{i<step?<i className="ti ti-check" style={{fontSize:10}}/>:i+1}</div>
+                <span>{s}</span>
+              </div>
+              {i<4&&<div className="wsl"/>}
+            </React.Fragment>
+          ))}
+        </div>
+        {step===0&&<div>
+          <div className="fr"><div className="fg"><label className="fl">Klinik adı</label><input className="fi" defaultValue="Smile Dental Clinic"/></div><div className="fg"><label className="fl">Adres</label><input className="fi" defaultValue="Hauptstraße 45, Berlin"/></div></div>
+          <div className="fr"><div className="fg"><label className="fl">Acil telefon</label><input className="fi" defaultValue="+49 30 1234567"/></div><div className="fg"><label className="fl">Google Review</label><input className="fi" placeholder="https://g.page/r/..."/></div></div>
+        </div>}
+        {step===1&&<div>
+          <div style={{fontSize:12,color:'var(--text2)',marginBottom:12}}>Lena hangi dillerde yanıt versin?</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+            {[['🇩🇪','Almanca','DE'],['🇬🇧','İngilizce','EN'],['🇳🇱','Hollandaca','NL'],['🇫🇷','Fransızca','FR'],['🇹🇷','Türkçe','TR']].map(([f,l,c])=>(
+              <div key={c} onClick={()=>tl(c)} style={{padding:10,textAlign:'center',border:langs.includes(c)?'2px solid var(--accent)':'1px solid var(--border2)',borderRadius:'var(--radius)',cursor:'pointer',fontSize:13,background:langs.includes(c)?'var(--accent-bg)':'var(--surface2)',color:langs.includes(c)?'var(--accent)':'var(--text2)'}}>
+                {f} {l}
+              </div>
+            ))}
+          </div>
+        </div>}
+        {step===2&&<div>
+          <div className="fr"><div className="fg"><label className="fl">Hafta içi başlangıç</label><input className="fi" defaultValue="09:00"/></div><div className="fg"><label className="fl">Hafta içi bitiş</label><input className="fi" defaultValue="18:00"/></div></div>
+          <div className="fr"><div className="fg"><label className="fl">Cumartesi başlangıç</label><input className="fi" defaultValue="09:00"/></div><div className="fg"><label className="fl">Cumartesi bitiş</label><input className="fi" defaultValue="13:00"/></div></div>
+          <div className="fr"><div className="fg"><label className="fl">Muayene süresi (dk)</label><input className="fi" defaultValue="20" type="number"/></div><div className="fg"><label className="fl">Pazar</label><select className="fi"><option>Kapalı</option><option>Açık</option></select></div></div>
+        </div>}
+        {step===3&&<div>
+          <div style={{fontSize:12,color:'var(--text2)',marginBottom:12}}>Doktorları ekleyin</div>
+          <div style={{display:'flex',gap:8,marginBottom:8,alignItems:'center'}}>
+            <Av name="Dr Schmidt" size={28}/>
+            <input className="fi" defaultValue="Dr. Schmidt" style={{flex:1}}/>
+            <input className="fi" defaultValue="schmidt@smile.de" style={{flex:1}}/>
+          </div>
+          <Btn sm style={{width:'100%',justifyContent:'center',marginTop:4}}><i className="ti ti-plus"/> Doktor ekle</Btn>
+        </div>}
+        {step===4&&<div style={{textAlign:'center',padding:'12px 0'}}>
+          <i className="ti ti-circle-check" style={{fontSize:52,color:'var(--success)',display:'block',marginBottom:12}}/>
+          <div style={{fontSize:18,fontWeight:700,marginBottom:6}}>Klinik hazır!</div>
+          <div style={{fontSize:12,color:'var(--text2)',marginBottom:16}}>Dental AI sisteminiz kuruldu.</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,textAlign:'left'}}>
+            <div style={{background:'var(--success-bg)',borderRadius:'var(--radius)',padding:'8px 10px'}}><div style={{fontSize:11,fontWeight:600,color:'var(--success)',marginBottom:3}}>✓ Aktif</div><div style={{fontSize:11,color:'var(--success)'}}>E-posta, Röntgen YZ, CRM</div></div>
+            <div style={{background:'var(--warning-bg)',borderRadius:'var(--radius)',padding:'8px 10px'}}><div style={{fontSize:11,fontWeight:600,color:'var(--warning)',marginBottom:3}}>⚠ Bağlantı bekliyor</div><div style={{fontSize:11,color:'var(--warning)'}}>WhatsApp, SMS, Voice AI</div></div>
+          </div>
+        </div>}
+        <div style={{display:'flex',justifyContent:'space-between',marginTop:20}}>
+          <Btn style={{visibility:step===0?'hidden':'visible'}} onClick={()=>setStep(s=>s-1)}><i className="ti ti-arrow-left"/> Geri</Btn>
+          {step<4?<Btn type="p" onClick={()=>setStep(s=>s+1)}>Devam et <i className="ti ti-arrow-right"/></Btn>:<Btn type="p" onClick={onDone}>Panele geç <i className="ti ti-arrow-right"/></Btn>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// LOGIN
+const Login = ({onLogin})=>{
+  const [role,setRole]=useState('admin');
+  return (
+    <div className="ls">
+      <div className="lc">
+        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:20}}>
+          <div style={{width:36,height:36,background:'var(--accent-bg)',border:'1px solid var(--accent-border)',borderRadius:'var(--radius)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>🦷</div>
+          <div><div style={{fontSize:16,fontWeight:700}}>Dental AI</div><div style={{fontSize:11,color:'var(--text2)'}}>Smile Dental Clinic</div></div>
+        </div>
+        <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>Rol seç — her rol farklı içerik görür:</div>
+        <div className="rg">
+          {[['admin','ti-shield','Admin','Klinik sahibi'],['doctor','ti-stethoscope','Doktor','Dr. Schmidt'],['reception','ti-user','Resepsiyon','Tam erişim yok']].map(([r,ic,l,s])=>(
+            <div key={r} className={`rb${role===r?' sel':''}`} onClick={()=>setRole(r)}>
+              <i className={`ti ${ic}`} style={{fontSize:16,display:'block',marginBottom:3}}/>
+              <div style={{fontWeight:500}}>{l}</div>
+              <div style={{fontSize:9,opacity:.7,marginTop:1}}>{s}</div>
+            </div>
+          ))}
+        </div>
+        <div className="fg"><label className="fl">E-posta</label><input className="fi" defaultValue="admin@smiledental.de"/></div>
+        <div className="fg"><label className="fl">Şifre</label><input className="fi" type="password" defaultValue="12345678"/></div>
+        <Btn type="p" style={{width:'100%',justifyContent:'center',marginTop:10}} onClick={()=>onLogin(role)}>Giriş yap</Btn>
+        <div style={{marginTop:12,background:'var(--surface2)',borderRadius:'var(--radius)',padding:'8px 10px',fontSize:10,color:'var(--text3)'}}>
+          <strong style={{color:'var(--text)'}}>Admin:</strong> Tüm veriler, gelir, ayarlar<br/>
+          <strong style={{color:'var(--text)'}}>Doktor:</strong> Sadece kendi hastaları + sabah özeti<br/>
+          <strong style={{color:'var(--text)'}}>Resepsiyon:</strong> Randevular, hasta ekle
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// MAIN APP
+const App = ()=>{
+  const [screen,setScreen]=useState('wizard');
+  const [role,setRole]=useState('admin');
+  const [page,setPage]=useState('dashboard');
+  const [notif,setNotif]=useState(false);
+  const [profile,setProfile]=useState(null);
+
+  const navigate=(id)=>{
+    if(profile)setProfile(null);
+    if(BLOCKED[role]?.includes(id)){setPage('blocked');return;}
+    setPage(id);setNotif(false);
+  };
+
+  const renderPage=()=>{
+    if(profile)return <PatientProfile patient={profile} onBack={()=>setProfile(null)}/>;
+    switch(page){
+      case 'dashboard':return <Dashboard role={role}/>;
+      case 'patients':return <Patients role={role} onProfile={p=>setProfile(p)}/>;
+      case 'calendar':return <Calendar/>;
+      case 'appointments':return <Appointments role={role}/>;
+      case 'plans':return <Plans/>;
+      case 'xray':return <Xray/>;
+      case 'videolib':return <VideoLib/>;
+      case 'lab':return <Lab/>;
+      case 'whatsapp':return <WhatsApp/>;
+      case 'calls':return <Calls/>;
+      case 'satisfaction':return <Satisfaction/>;
+      case 'lena':return <Lena/>;
+      case 'lifetime':return <Lifetime/>;
+      case 'report':return <Report/>;
+      case 'reminder':return <Reminder/>;
+      case 'referral':return <Referral/>;
+      case 'payment':return <Payment/>;
+      case 'docperf':return <DocPerf/>;
+      case 'team':return <Team/>;
+      case 'settings':return <Settings/>;
+      case 'blocked':return <Blocked/>;
+      default:return <Dashboard role={role}/>;
+    }
+  };
+
+  if(screen==='wizard')return <Wizard onDone={()=>setScreen('login')}/>;
+  if(screen==='login')return <Login onLogin={r=>{setRole(r);setScreen('app');setPage('dashboard');}}/>;
+
+  const RL={admin:'Klinik Admin',doctor:'Dr. Schmidt',reception:'Resepsiyon'};
+  const RA={admin:'AD',doctor:'DS',reception:'RE'};
+  const RC={admin:'p',doctor:'a',reception:'w'};
+
+  return (
+    <div className="app">
+      <div className="sidebar">
+        <div className="logo">
+          <div className="logo-icon">🦷</div>
+          <div><div className="logo-name">Dental AI</div><div className="logo-sub">Smile Dental Clinic</div></div>
+        </div>
+        <nav className="nav">
+          {NAV[role].map(section=>(
+            <React.Fragment key={section.s}>
+              <div className="ns">{section.s}</div>
+              {section.i.map(item=>(
+                <div key={item.id} className={`ni${(profile?'profile':page)===item.id?' active':''}`} onClick={()=>navigate(item.id)}>
+                  <i className={`ti ${item.ic}`}/>
+                  <span>{item.l}</span>
+                  {item.badge&&<span className="nb">{item.badge}</span>}
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </nav>
+        <div className="sf">
+          <div className="su">
+            <div className="av">{RA[role]}</div>
+            <span style={{fontSize:11,fontWeight:500}}>{RL[role]}</span>
+          </div>
+          <Btn sm onClick={()=>setScreen('login')}>Çıkış</Btn>
+        </div>
+      </div>
+      <div className="main">
+        <div className="topbar">
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <div className="topbar-title">{profile?`Hasta: ${profile.name}`:TITLES[page]||page}</div>
+            <span style={{fontSize:9,padding:'2px 6px',borderRadius:10,fontWeight:600,background:`var(--${RC[role]==='p'?'pro':RC[role]==='a'?'accent':'warning'}-bg)`,color:`var(--${RC[role]==='p'?'pro':RC[role]==='a'?'accent':'warning'})`}}>{RL[role]}</span>
+          </div>
+          <div className="tr">
+            <span style={{fontSize:10,color:'var(--text3)'}}>27 Ağu 2026</span>
+            <button className="btn" style={{padding:'5px 8px',position:'relative'}} onClick={()=>setNotif(o=>!o)}>
+              <i className="ti ti-bell" style={{fontSize:15}}/>
+              <span style={{position:'absolute',top:2,right:2,width:7,height:7,borderRadius:'50%',background:'var(--danger)'}}/>
+            </button>
+            <Btn type="p" sm><i className="ti ti-plus"/> {role==='doctor'?'Randevu ekle':'Yeni hasta'}</Btn>
+          </div>
+          <div className={`np${notif?' open':''}`}>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
+              <span style={{fontSize:12,fontWeight:600}}>Bildirimler</span>
+              <span style={{fontSize:10,color:'var(--accent)',cursor:'pointer'}} onClick={()=>setNotif(false)}>Okundu</span>
+            </div>
+            {[['ti-phone-incoming','d','Acil — Sophie Klein','Şiddetli ağrı, Lena yönlendirdi','5 dk'],['ti-check','s','Plan kabul — Peter Hoffmann','€3.200 implant planı kabul edildi','23 dk'],['ti-calendar-x','w','Gelmedi — Emma Fischer','16:00 randevusu, WA gönderildi','1 sa'],['ti-brand-whatsapp','a','Yeni randevu — Hans Weber','Cuma 10:00 WhatsApp\'tan aldı','2 sa']].map(([ic,t,ti,d,tm])=>(
+              <div key={ti} className="ni2">
+                <div className="nic" style={{background:`var(--${t==='s'?'success':t==='w'?'warning':t==='d'?'danger':'accent'}-bg)`}}>
+                  <i className={`ti ${ic}`} style={{fontSize:12,color:`var(--${t==='s'?'success':t==='w'?'warning':t==='d'?'danger':'accent'})`}}/>
+                </div>
+                <div><div style={{fontSize:11,fontWeight:500}}>{ti}</div><div style={{fontSize:10,color:'var(--text2)'}}>{d}</div><div style={{fontSize:9,color:'var(--text3)',marginTop:1}}>{tm} önce</div></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="content" onClick={()=>notif&&setNotif(false)}>
+          {renderPage()}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
 </html>
